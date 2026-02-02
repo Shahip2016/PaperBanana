@@ -1,0 +1,10 @@
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project Specific
+.gemini/
+brain/
+*.log

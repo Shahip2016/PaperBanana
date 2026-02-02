@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaperBanana | Automating Academic Illustration</title>
+    <link rel="stylesheet" href="styles/theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 320px;
+            --header-height: 70px;
+        }
+
+        body {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: var(--header-height) 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        aside {
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+        }
+
+        main {
+            position: relative;
+            background: #0b1120;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            width: 90%;
+            height: 80%;
+            border-radius: var(--radius-lg);
+            border: 2px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        .agent-status-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .agent-item {
+            padding: 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #475569;
+        }
+
+        .status-active .status-dot {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .prompt-input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            resize: none;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Paper<span>Banana</span> 🍌</div>
+        <div class="actions">
+            <button class="btn btn-primary" id="run-pipeline">Run Pipeline</button>
+        </div>
+    </header>
+
+    <aside class="glass">
+        <div class="input-section">
+            <h3 style="margin-bottom: 1rem;">Research Concept</h3>
+            <textarea class="prompt-input" id="user-input" rows="5" placeholder="Describe the scientific concept or paste an abstract..."></textarea>
+        </div>
+
+        <div class="orchestra-section">
+            <h3 style="margin-bottom: 1rem;">Agent Orchestra</h3>
+            <ul class="agent-status-list" id="agent-list">
+                <li class="agent-item glass" data-agent="retriever"><div class="status-dot"></div> Retriever Agent</li>
+                <li class="agent-item glass" data-agent="planner"><div class="status-dot"></div> Planner Agent</li>
+                <li class="agent-item glass" data-agent="stylist"><div class="status-dot"></div> Stylist Agent</li>
+                <li class="agent-item glass" data-agent="visualizer"><div class="status-dot"></div> Visualizer Agent</li>
+                <li class="agent-item glass" data-agent="critic"><div class="status-dot"></div> Critic Agent</li>
+            </ul>
+        </div>
+    </aside>
+
+    <main>
+        <div id="canvas-container">
+            <p class="text-muted">Generate an illustration to see it here.</p>
+        </div>
+        
+        <div id="inspector" style="position: absolute; right: 2rem; top: 2rem; width: 260px;" class="card glass">
+            <h3>Inspector</h3>
+            <div id="inspector-content" class="text-muted" style="font-size: 0.85rem; margin-top: 1rem;">
+                Select an element to view properties.
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
