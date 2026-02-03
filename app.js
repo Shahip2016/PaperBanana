@@ -26,32 +26,54 @@ class App {
         this.canvas = document.getElementById('canvas-container');
         this.agentItems = document.querySelectorAll('.agent-item');
 
+        this.orchestrator.onAgentStatusChange = (agentId, status) => {
+            this.updateAgentStatusUI(agentId, status);
+        };
+
         this.runBtn.addEventListener('click', () => this.handleRun());
     }
 
     async handleRun() {
         const input = this.userInput.value || "Default scientific pipeline concepts";
         this.runBtn.disabled = true;
-        this.runBtn.textContent = 'Processing...';
+        this.runBtn.classList.add('loading');
+        this.runBtn.textContent = 'Orchestrating...';
 
         this.resetUI();
 
         try {
-            // We simulate the pipeline and update UI per agent
-            // This is a direct demo of the agentic workflow
             const context = await this.orchestrator.run(input);
-            this.updateVisualization(context.visualization);
+            this.updateVisualization(context.visualizer);
         } catch (error) {
             console.error(error);
         } finally {
             this.runBtn.disabled = false;
+            this.runBtn.classList.remove('loading');
             this.runBtn.textContent = 'Run Pipeline';
         }
     }
 
+    updateAgentStatusUI(agentId, status) {
+        const item = document.querySelector(`.agent-item[data-agent="${agentId}"]`);
+        if (!item) return;
+
+        if (status === 'working') {
+            item.classList.add('status-active');
+            item.classList.add('pulse');
+        } else if (status === 'done') {
+            item.classList.remove('pulse');
+            item.classList.add('status-complete');
+        } else if (status === 'error') {
+            item.classList.remove('pulse');
+            item.classList.add('status-error');
+        }
+    }
+
     resetUI() {
-        this.canvas.innerHTML = '<div class="spinner"></div>';
-        this.agentItems.forEach(item => item.classList.remove('status-active'));
+        this.canvas.innerHTML = '<div class="loader"></div>';
+        this.agentItems.forEach(item => {
+            item.classList.remove('status-active', 'status-complete', 'status-error', 'pulse');
+        });
     }
 
     updateVisualization(viz) {
