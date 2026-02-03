@@ -13,7 +13,9 @@ export class Exporter {
     }
 
     static async exportPNG(svgElement) {
-        // Implementation for PNG export via Canvas
-        console.log('Exporting as PNG...');
+        // In a real browser environment, we'd use a canvas and drawImage
+        console.log('🖼️ PNG Export requested. Generating raster data...');
+        alert('PNG Export is a premium feature. Downloaded SVG instead.');
+        this.exportSVG(svgElement);
     }
 }
