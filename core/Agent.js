@@ -3,27 +3,35 @@ export class Agent {
         this.name = name;
         this.role = role;
         this.status = 'idle';
+        this.onStatusChange = null;
     }
 
-    async process(input) {
-        this.status = 'working';
-        console.log(`[${this.name}] Starting work on: ${input.substring(0, 30)}...`);
+    async process(context) {
+        this.updateStatus('working');
+        this.log(`Starting work on: ${context.rawInput?.substring(0, 30)}...`);
         try {
-            const result = await this.execute(input);
-            this.status = 'done';
+            const result = await this.execute(context);
+            this.updateStatus('done');
             return result;
         } catch (error) {
-            this.status = 'error';
-            console.error(`[${this.name}] Error:`, error);
+            this.updateStatus('error');
+            this.log(`Error: ${error.message}`);
             throw error;
         }
     }
 
-    async execute(input) {
+    updateStatus(status) {
+        this.status = status;
+        if (this.onStatusChange) {
+            this.onStatusChange(this.name.toLowerCase(), status);
+        }
+    }
+
+    async execute(context) {
         throw new Error('Method "execute" must be implemented by concrete agents.');
     }
 
     log(message) {
-        console.log(`[${this.name}] ${message}`);
+        console.log(`%c[${this.name}]`, 'color: #fbbf24; font-weight: bold', message);
     }
 }
