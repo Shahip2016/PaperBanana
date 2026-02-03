@@ -8,15 +8,17 @@ export class Planner extends Agent {
     async execute(context) {
         this.log('Designing structural plan for the illustration...');
 
-        const concepts = context.concepts;
+        const concepts = context.retriever;
+        if (!concepts) throw new Error('No concepts found from Retriever.');
+
         const plan = {
             layoutType: this.determineLayout(concepts),
             nodes: this.generateNodes(concepts),
-            connections: concepts.relationships,
+            connections: concepts.relationships || [],
             grouping: 'hierarchical'
         };
 
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate complex planning
+        await new Promise(resolve => setTimeout(resolve, 1000));
         return plan;
     }
 

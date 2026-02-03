@@ -8,17 +8,20 @@ export class Stylist extends Agent {
     async execute(context) {
         this.log('Extracting aesthetic parameters...');
 
-        const theme = context.concepts.theme;
+        const concepts = context.retriever;
+        if (!concepts) throw new Error('No concepts found from Retriever.');
+
+        const theme = concepts.theme || 'academic-modern';
         const styles = {
             palette: this.getPalette(theme),
             typography: {
-                family: 'Inter, sans-serif',
-                headingSize: '16px',
-                bodySize: '12px'
+                family: "'Inter', sans-serif",
+                headingSize: '18px',
+                bodySize: '14px'
             },
             drawing: {
                 strokeWidth: 2,
-                cornerRadius: 8,
+                cornerRadius: 12,
                 shadows: true
             }
         };
@@ -30,16 +33,16 @@ export class Stylist extends Agent {
     getPalette(theme) {
         const palettes = {
             'neural-tech': {
-                primary: '#3b82f6',
-                secondary: '#60a5fa',
-                text: '#f8fafc',
-                accent: '#f59e0b'
+                primary: '#3b82f6', // blue-500
+                secondary: '#2563eb', // blue-600
+                text: '#ffffff',
+                accent: '#fbbf24' // amber-400
             },
             'academic-modern': {
-                primary: '#fbbf24',
-                secondary: '#f59e0b',
-                text: '#0f172a',
-                accent: '#2563eb'
+                primary: '#6366f1', // indigo-500
+                secondary: '#4338ca', // indigo-700
+                text: '#ffffff',
+                accent: '#fbbf24' // amber-400
             }
         };
         return palettes[theme] || palettes['academic-modern'];
