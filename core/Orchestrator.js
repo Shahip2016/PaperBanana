@@ -1,4 +1,11 @@
+/**
+ * Manages the execution pipeline of agents.
+ * pipelines flow: Retriever -> Planner -> Stylist -> Visualizer -> Critic
+ */
 export class Orchestrator {
+    /**
+     * Initializes the orchestrator and defines the status callback.
+     */
     constructor() {
         this.agents = new Map();
         this.pipeline = ['retriever', 'planner', 'stylist', 'visualizer', 'critic'];
