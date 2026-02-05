@@ -8,14 +8,19 @@ export class Agent {
 
     async process(context) {
         this.updateStatus('working');
-        this.log(`Starting work on: ${context.rawInput?.substring(0, 30)}...`);
+        const snippet = context.rawInput && context.rawInput.length > 50
+            ? context.rawInput.substring(0, 50) + '...'
+            : context.rawInput;
+
+        this.log(`Starting work on input: "${snippet}"`);
+
         try {
             const result = await this.execute(context);
             this.updateStatus('done');
             return result;
         } catch (error) {
             this.updateStatus('error');
-            this.log(`Error: ${error.message}`);
+            this.log(`Failed: ${error.message}`);
             throw error;
         }
     }

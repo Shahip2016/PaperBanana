@@ -43,9 +43,15 @@ class App {
 
         try {
             const context = await this.orchestrator.run(input);
-            this.updateVisualization(context.visualizer);
+            if (context && context.errors) {
+                console.error('Pipeline had errors:', context.errors);
+                // Could act on specific errors here
+            }
+            if (context) {
+                this.updateVisualization(context.visualizer);
+            }
         } catch (error) {
-            console.error(error);
+            console.error("App: Fatal error in pipeline execution", error);
         } finally {
             this.runBtn.disabled = false;
             this.runBtn.classList.remove('loading');

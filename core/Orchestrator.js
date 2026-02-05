@@ -13,6 +13,11 @@ export class Orchestrator {
     }
 
     async run(userInput) {
+        if (!userInput) {
+            console.warn('Orchestrator: No input provided.');
+            return null;
+        }
+
         let context = {
             rawInput: userInput,
             retriever: null, // concepts
@@ -26,10 +31,23 @@ export class Orchestrator {
 
         for (const agentId of this.pipeline) {
             const agent = this.agents.get(agentId);
-            if (!agent) continue;
+            if (!agent) {
+                console.warn(`Orchestrator: Agent ${agentId} not found.`);
+                continue;
+            }
 
-            const result = await agent.process(context);
-            context[agentId] = result;
+            try {
+                const result = await agent.process(context);
+                context[agentId] = result;
+            } catch (error) {
+                console.error(`Orchestrator: Agent ${agentId} failed.`, error);
+                // Decide if we should key going or stop. 
+                // For now, mark as error in context and maybe continue if possible, 
+                // but usually a pipeline breaks. 
+                // We'll expose the error in the context for debugging.
+                context.errors = context.errors || {};
+                context.errors[agentId] = error.message;
+            }
         }
 
         console.log('✅ Pipeline Complete.');
