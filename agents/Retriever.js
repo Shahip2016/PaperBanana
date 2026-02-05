@@ -3,6 +3,7 @@ import { Agent } from '../core/Agent.js';
 export class Retriever extends Agent {
     constructor() {
         super('Retriever', 'Concept Extraction');
+        this.cache = new Map();
     }
 
     async execute(context) {
@@ -12,6 +13,12 @@ export class Retriever extends Agent {
         // For this implementation, we simulate the extraction logic.
         const input = context.rawInput || '';
 
+        // Check cache
+        if (this.cache.has(input)) {
+            this.log('Comparing against cache... Hit!');
+            return this.cache.get(input);
+        }
+
         const concepts = {
             entities: this.extractEntities(input),
             relationships: this.extractRelationships(input),
@@ -19,6 +26,9 @@ export class Retriever extends Agent {
         };
 
         await new Promise(resolve => setTimeout(resolve, 800)); // Simulate processing
+
+        // Store in cache
+        this.cache.set(input, concepts);
         return concepts;
     }
 
