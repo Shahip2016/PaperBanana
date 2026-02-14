@@ -10,7 +10,8 @@ The system follows a five-agent collaborative workflow:
 2.  **Planner**: Develops a structured structural plan for the illustration.
 3.  **Stylist**: Defines the visual aesthetics, ensuring thematic consistency.
 4.  **Visualizer**: Renders the final illustration using SVG and Canvas technologies.
-5.  **Critic**: Reviews the output for scientific accuracy and aesthetic quality.
+5.  **Animator**: (NEW) Generates Manim-style motion graphics for concept visualization.
+6.  **Critic**: Reviews the output for scientific accuracy and aesthetic quality.
 
 ## 🚀 Getting Started
 
