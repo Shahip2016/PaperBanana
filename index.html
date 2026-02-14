@@ -140,7 +140,18 @@
 
     <main>
         <div id="canvas-container">
-            <p class="text-muted">Generate an illustration to see it here.</p>
+            <canvas id="animation-canvas" width="800" height="600" style="display: none;"></canvas>
+            <div id="svg-output">
+                <p class="text-muted">Generate an illustration to see it here.</p>
+            </div>
+        </div>
+        
+        <div id="playback-controls" style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: none;" class="glass card">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="btn" id="play-anim">Play Animation</button>
+                <button class="btn" id="reset-anim">Reset</button>
+                <span id="anim-time" class="text-muted">0.0s</span>
+            </div>
         </div>
         
         <div id="inspector" style="position: absolute; right: 2rem; top: 2rem; width: 260px;" class="card glass">

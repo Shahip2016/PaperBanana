@@ -5,6 +5,7 @@ import { Stylist } from './agents/Stylist.js';
 import { Visualizer } from './agents/Visualizer.js';
 import { Animator } from './agents/Animator.js';
 import { Critic } from './agents/Critic.js';
+import { ManimEngine } from './core/ManimEngine.js';
 
 class App {
     constructor() {
@@ -25,14 +26,24 @@ class App {
     initUI() {
         this.runBtn = document.getElementById('run-pipeline');
         this.userInput = document.getElementById('user-input');
-        this.canvas = document.getElementById('canvas-container');
         this.agentItems = document.querySelectorAll('.agent-item');
+
+        this.animCanvas = document.getElementById('animation-canvas');
+        this.svgOutput = document.getElementById('svg-output');
+        this.playbackControls = document.getElementById('playback-controls');
+        this.playBtn = document.getElementById('play-anim');
+        this.resetBtn = document.getElementById('reset-anim');
+        this.animTime = document.getElementById('anim-time');
+
+        this.manim = new ManimEngine(this.animCanvas);
 
         this.orchestrator.onAgentStatusChange = (agentId, status) => {
             this.updateAgentStatusUI(agentId, status);
         };
 
         this.runBtn.addEventListener('click', () => this.handleRun());
+        this.playBtn.addEventListener('click', () => this.handlePlay());
+        this.resetBtn.addEventListener('click', () => this.handleReset());
     }
 
     async handleRun() {
@@ -78,7 +89,9 @@ class App {
     }
 
     resetUI() {
-        this.canvas.innerHTML = '<div class="loader"></div>';
+        this.svgOutput.innerHTML = '<div class="loader"></div>';
+        this.animCanvas.style.display = 'none';
+        this.playbackControls.style.display = 'none';
         this.agentItems.forEach(item => {
             item.classList.remove('status-active', 'status-complete', 'status-error', 'pulse');
         });
@@ -87,7 +100,7 @@ class App {
     updateVisualization(context) {
         const { visualizer, animator } = context;
         if (visualizer && visualizer.data) {
-            this.canvas.innerHTML = visualizer.data;
+            this.svgOutput.innerHTML = visualizer.data;
         }
 
         if (animator) {
@@ -96,8 +109,32 @@ class App {
     }
 
     setupAnimation(animData) {
-        // We will implement this in the UI enhancement phase
-        console.log("Animation data ready", animData);
+        this.currentAnimData = animData;
+        this.playbackControls.style.display = 'block';
+        this.animCanvas.style.display = 'block';
+
+        // Prepare engine
+        this.manim.mobjects = animData.mobjects;
+        this.handleReset(); // Initialize state
+    }
+
+    handlePlay() {
+        if (this.currentAnimData) {
+            this.manim.play(this.currentAnimData.animations);
+            this.playBtn.textContent = 'Playing...';
+            this.playBtn.disabled = true;
+        }
+    }
+
+    handleReset() {
+        this.manim.stop();
+        if (this.currentAnimData) {
+            // Reset mobject states
+            this.currentAnimData.mobjects.forEach(m => m.opacity = 0);
+        }
+        this.manim.render(0); // Initial frame
+        this.playBtn.textContent = 'Play Animation';
+        this.playBtn.disabled = false;
     }
 }
 
