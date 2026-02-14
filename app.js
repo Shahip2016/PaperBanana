@@ -3,6 +3,7 @@ import { Retriever } from './agents/Retriever.js';
 import { Planner } from './agents/Planner.js';
 import { Stylist } from './agents/Stylist.js';
 import { Visualizer } from './agents/Visualizer.js';
+import { Animator } from './agents/Animator.js';
 import { Critic } from './agents/Critic.js';
 
 class App {
@@ -17,6 +18,7 @@ class App {
         this.orchestrator.registerAgent('planner', new Planner());
         this.orchestrator.registerAgent('stylist', new Stylist());
         this.orchestrator.registerAgent('visualizer', new Visualizer());
+        this.orchestrator.registerAgent('animator', new Animator());
         this.orchestrator.registerAgent('critic', new Critic());
     }
 
@@ -48,7 +50,7 @@ class App {
                 // Could act on specific errors here
             }
             if (context) {
-                this.updateVisualization(context.visualizer);
+                this.updateVisualization(context);
             }
         } catch (error) {
             console.error("App: Fatal error in pipeline execution", error);
@@ -82,10 +84,20 @@ class App {
         });
     }
 
-    updateVisualization(viz) {
-        if (viz && viz.data) {
-            this.canvas.innerHTML = viz.data;
+    updateVisualization(context) {
+        const { visualizer, animator } = context;
+        if (visualizer && visualizer.data) {
+            this.canvas.innerHTML = visualizer.data;
         }
+
+        if (animator) {
+            this.setupAnimation(animator);
+        }
+    }
+
+    setupAnimation(animData) {
+        // We will implement this in the UI enhancement phase
+        console.log("Animation data ready", animData);
     }
 }
 

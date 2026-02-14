@@ -8,7 +8,7 @@ export class Orchestrator {
      */
     constructor() {
         this.agents = new Map();
-        this.pipeline = ['retriever', 'planner', 'stylist', 'visualizer', 'critic'];
+        this.pipeline = ['retriever', 'planner', 'stylist', 'visualizer', 'animator', 'critic'];
         this.onAgentStatusChange = null;
     }
 
@@ -31,6 +31,7 @@ export class Orchestrator {
             planner: null,   // plan
             stylist: null,   // styles
             visualizer: null, // visualization
+            animator: null,   // motion
             critic: null     // critique
         };
 
